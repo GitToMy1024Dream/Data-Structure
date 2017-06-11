@@ -26,6 +26,10 @@ public:
 	BTree()
 		: _pRoot(NULL)
 	{}
+	~BTree()
+	{
+		_Destroy(_pRoot);
+	}
 	//查找值为key的结点
 	pair<Node*, int> Find(const K& key)
 	{
@@ -121,7 +125,6 @@ public:
 		_InOrder(_pRoot);
 		cout << endl;
 	}
-
 private:
 	//中序遍历
 	void _InOrder(Node* pRoot)
@@ -158,6 +161,17 @@ private:
 		{
 			pSub->_pParent = pCur;
 		}
+	}
+	//销毁B树
+	void _Destroy(Node* root)
+	{
+		if (root == NULL)
+			return;
+		for (size_t idx = 0; idx < root->_size; ++idx)
+		{
+			_Destroy(root->_pSub[idx]);
+		}
+		_Destroy(root->_pSub[root->_size]);
 	}
 private:
 	Node* _pRoot;
